@@ -24,21 +24,5 @@
         <li><a href="contentNotLocked">Page contenu non bloqué</a></li>
         <li><a href="contentLocked">Page contenu bloqué</a></li>
     </ul>
-
- <script>
- function getToken() {
-    // What do I have to add here to look only in the "obligations=" cookie? 
-    // Because now it searches all the cookies.
-    if(document.cookie.includes('token='))
-    {
-        let elements = document.cookie.indexOf("token=")
-        elements = document.cookie.substring(elements, document.cookie.length)
-        let token = elements.split("=")[1]
-    }
- }
-
-getToken()
-
-  </script>
 </body>
 </html>
