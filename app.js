@@ -35,7 +35,7 @@ app.post("/login", (req, res, next) => {
     {
       const privateKey = fs.readFileSync('./key/private.key')
 
-      TOKEN = jwt.sign(userInfos, privateKey, { algorithm: 'RS256', expiresIn : "1m"})
+      TOKEN = jwt.sign(userInfos, privateKey, { algorithm: 'RS256', expiresIn : "10s"})
 
       if(TOKEN === null)
       {
@@ -55,18 +55,30 @@ verfifyToken = (req, res, next) => {
 
   if(req.cookies.token)
   {
-    DECODED = jwt.verify(req.cookies.token, publicKey)
-    
-    if(DECODED === null){
-      res.status(401).render("403.ejs")
+    //gérer l'erreur d'expiration !
+    DECODED = jwt.decode(req.cookies.token)
+
+    if(Date.now() > DECODED.exp)
+    {
+      res.status(401).render("401.ejs")
     }
-    else{
-      console.log("Token vérifié ok")
-      next()
+    else
+    {
+      VERIFY = jwt.verify(req.cookies.token, publicKey)
+
+      if(VERIFY === null)
+      {
+        res.status(401).render("401.ejs")
+      }
+      else
+      {
+        console.log("Token vérifié ok")
+        next()
+      }
     }
   }
   else{
-    res.status(403).render("403.ejs")
+    res.status(401).render("401.ejs")
   }
   
 }
